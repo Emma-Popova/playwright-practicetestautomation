@@ -1,0 +1,25 @@
+{
+  "name": "playwright-practicetestautomation",
+  "version": "1.0.0",
+  "description": "My Playwright automation practice",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Emma-Popova/playwright-practicetestautomation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Emma-Popova/playwright-practicetestautomation/issues"
+  },
+  "homepage": "https://github.com/Emma-Popova/playwright-practicetestautomation#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.5"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.7"
+  }
+}
