@@ -14,8 +14,21 @@ test.describe('Dynamic Elements and Interactions', () => {
     await expect(row2Input).toBeVisible({ timeout: 10_000 });
   });
 
-  // test ("should save text in the second row", async ({ page }) => {
-// });
+  test ("should save text in the second row", async ({ page }) => {
+    await page.getByRole('button', { name: 'Add', exact: true }).click();
+
+    const row2 = page.locator('#row2.row');
+    const row2Input = row2.locator('input');
+    const inputText = 'Apple';
+
+    await expect(row2Input).toBeVisible({ timeout: 10_000 });
+    await row2Input.fill(inputText);
+
+    await row2.getByRole('button', { name: 'Save' }).click();
+    await expect(row2Input).toHaveValue(inputText);
+
+   
+});
 
 // test ("should allow editing a disabled input", async ({ page }) => {
 // });
