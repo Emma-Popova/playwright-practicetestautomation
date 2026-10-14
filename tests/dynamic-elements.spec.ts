@@ -63,8 +63,15 @@ test('should display confirmation message after adding a row', async ({ page }) 
     await expect(page.locator('#confirmation')).toHaveText('Row 2 was added');
 });
 
-// test ("should handle delayed appearance of the second row", async ({ page }) => {
-//     });
+
+test.skip('should demonstrate a timeout when the second row takes longer to appear', async ({ page }) => {
+  await page.getByRole('button', { name: 'Add', exact: true }).click();
+
+  const row2Input = page.locator('#row2 input');
+
+  // The second row takes about 5 seconds to appear.
+  // A 3-second timeout is not sufficient.
+  await expect(row2Input).toBeVisible({ timeout: 3_000 });
+    });
 
 });
-
