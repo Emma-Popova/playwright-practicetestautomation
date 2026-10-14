@@ -30,8 +30,30 @@ test.describe('Dynamic Elements and Interactions', () => {
    
 });
 
-// test ("should allow editing a disabled input", async ({ page }) => {
-// });
+test ("should allow editing a disabled input", async ({ page }) => {
+
+    await page.getByRole('button', { name: 'Add', exact: true }).click();
+
+    const row2 = page.locator('#row2.row');
+    const row2Input = row2.locator('input');
+    const row1 = page.locator('#row1.row');
+    const inputText = 'Apple';
+
+    await expect(row2Input).toBeVisible({ timeout: 10_000 });
+    await row2Input.fill(inputText);
+
+    await row2.getByRole('button', { name: 'Save' }).click();
+    await expect(row2Input).toHaveValue(inputText);
+
+    await row2.getByRole('button', {name: 'Remove'}).click();
+    await expect(row2Input).toBeDisabled();
+    
+    await row1.getByRole('button', {name: 'Add', exact: true}).click();
+    await expect(row2Input).toBeVisible({ timeout: 10_000 });
+    await row2.getByRole('button', {name: 'Edit'}).click();
+    await expect(row2Input).toBeEnabled();
+
+});
 
 // test ("should hide instructions after adding a row", async ({ page }) => {
 // });
