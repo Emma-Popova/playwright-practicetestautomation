@@ -55,8 +55,13 @@ test ("should allow editing a disabled input", async ({ page }) => {
 
 });
 
-// test ("should hide instructions after adding a row", async ({ page }) => {
-// });
+test('should display confirmation message after adding a row', async ({ page }) => {
+    await page.getByRole('button', { name: 'Add', exact: true }).click();
+
+    const row2Input = page.locator('#row2 input');
+    await expect(row2Input).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('#confirmation')).toHaveText('Row 2 was added');
+});
 
 // test ("should handle delayed appearance of the second row", async ({ page }) => {
 //     });
