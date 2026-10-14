@@ -5,9 +5,6 @@ test.describe("Login test", () => {
     await page.goto("/practice-test-login/");
     
 });
-
-
-test("Positive Login test", async ({ page }) => {
   const username = process.env.TEST_USERNAME;
   const password = process.env.TEST_PASSWORD;
 
@@ -15,6 +12,8 @@ test("Positive Login test", async ({ page }) => {
     throw new Error("Missing TEST_USERNAME or TEST_PASSWORD in .env");
   }
 
+test("Positive Login test", async ({ page }) => {
+  
    await page.getByRole('textbox', { name: "Username" }).fill(username);
    await page.getByRole('textbox', { name: "Password" }).fill(password);
    await page.getByRole('button', { name: "Submit" }).click();
@@ -24,14 +23,20 @@ test("Positive Login test", async ({ page }) => {
         
     });
 
-test("Negative Login test", async ({ page }) => {
+test("Negative Username test", async ({ page }) => {
     await page.getByRole('textbox', { name: "Username" }).fill("incorrectUser");
-    await page.getByRole('textbox', { name: "Password" }).fill("Password123");
+    await page.getByRole('textbox', { name: "Password" }).fill(password);
     await page.getByRole('button', { name: "Submit" }).click();
-    await expect(page.locator('#error')).toBeVisible();
-    await expect(page.locator('#error')).toHaveText("Your username is invalid!")
-    
+    await expect(page.locator('#error')).toHaveText("Your username is invalid!");
+
     });
 
+test("Negative Password test", async ({ page }) => {
+    await page.getByRole('textbox', { name: "Username" }).fill(username);
+    await page.getByRole('textbox', { name: "Password" }).fill("incorrectPassword");
+    await page.getByRole('button', { name: "Submit" }).click();
+    await expect(page.locator('#error')).toHaveText("Your password is invalid!");
+   
+    });
 
 });
