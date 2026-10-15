@@ -69,13 +69,27 @@ test.describe('Course Filtering and Sorting', () => {
         } 
      });
 
-   });
-//    Select Language = Python
-// Uncheck Intermediate and Advanced
-// Set Min enrollments = 10,000+
-// Verify only Python Beginner courses with ≥ 10,000 enrollments are visible
-// Fails if incorrect courses are visible
+       test('should display a message when no courses match the filters', async ({ page }) => {
+        const groupLanguage = page.getByRole('group', {name: "Language"});
+        const groupLevel = page.getByRole('group', {name: "Level"});
+        const groupEnrollment = page.getByRole('group', {name: "Min enrollments"});
+        await groupLanguage.getByRole('radio', {name: ' Java'}).click();
+        await groupLevel.getByRole('checkbox', {name: " Intermediate"}).uncheck();
+        await groupLevel.getByRole('checkbox', {name:" Beginner"}).uncheck();
+        await groupEnrollment.getByRole('button', {name: 'Any'}).click();
+        await page.getByRole('option', { name: '10,000+' }).click();
 
+        await expect(page.getByText('No matching courses.', { exact: true })).toBeVisible();
+   
+     });
+
+
+   });
+
+
+// Select a combination that yields no matches (e.g., Language with Level that does not exist)
+// Verify “No matching courses.” is shown
+// Fails if no-data state does not toggle with filters
 
 
 
