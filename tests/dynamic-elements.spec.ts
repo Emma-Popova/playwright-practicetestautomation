@@ -14,7 +14,7 @@ test.describe('Dynamic Elements and Interactions', () => {
     await expect(row2Input).toBeVisible({ timeout: 10_000 });
   });
 
-  test ("should save text in the second row", async ({ page }) => {
+  test ("should save text in the second row", async ({ page }) => { 
     await page.getByRole('button', { name: 'Add', exact: true }).click();
 
     const row2 = page.locator('#row2.row');
