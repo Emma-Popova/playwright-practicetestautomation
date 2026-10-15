@@ -10,9 +10,7 @@ test.describe('Course Filtering and Sorting', () => {
     const group = page.getByRole('group', {name: "Language"});
     // Use :visible to exclude hidden cells, which may still be included by allTextContents().
     const columnLanguage = page.locator('tbody td[data-col="language"]:visible'); 
-   
     await group.getByRole('radio', {name: " Java"}).click();
-
     await expect(columnLanguage).not.toHaveCount(0);
 
     for (const language of await columnLanguage.allTextContents()) {
@@ -22,6 +20,20 @@ test.describe('Course Filtering and Sorting', () => {
     });
 
   test('should display only Beginner courses when other levels are unchecked', async ({ page }) => {
+     const group = page.getByRole('group', {name: "Level"});
+     const columnLevel = page.locator('tbody td[data-col="level"]:visible');
+     await group.getByRole('checkbox', {name: " Intermediate"}).uncheck();
+     await group.getByRole('checkbox', {name:" Advanced"}).uncheck();
+
+    for(const level of await columnLevel.allTextContents()) {
+        expect(level.trim()).toBe('Beginner');
+    }
+
+
+
+  });
+
+  test('should display only courses with at least 10,000 enrollments', async ({ page }) => {
     const group = page.getByRole('group', {name: "Min enrollments"});
     const coulmnEnrollement = page.locator('tbody td[data-col="enrollments"]:visible');
     await group.getByRole('button', {name: 'Any'}).click();
@@ -34,10 +46,11 @@ test.describe('Course Filtering and Sorting', () => {
        //If the values ​​contain commas -> remove all commas and explicitly specify the decimal system.
         expect(parseInt(enrollment.replace(/,/g, ''), 10)).toBeGreaterThanOrEqual(10000);
 
-    }
+        }
+    });
 
-  });
 
 
-  
+
+
 });
