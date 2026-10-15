@@ -12,44 +12,32 @@ test.describe('Course Filtering and Sorting', () => {
     const columnLanguage = page.locator('tbody td[data-col="language"]:visible'); 
    
     await group.getByRole('radio', {name: " Java"}).click();
-    
+
     await expect(columnLanguage).not.toHaveCount(0);
 
     for (const language of await columnLanguage.allTextContents()) {
         expect(language.trim()).toBe('Java');
-        //const languages = await columnLanguage.allTextContents();
-        //console.log(languages);
+     
         } 
-  
+    });
+
+  test('should display only Beginner courses when other levels are unchecked', async ({ page }) => {
+    const group = page.getByRole('group', {name: "Min enrollments"});
+    const coulmnEnrollement = page.locator('tbody td[data-col="enrollments"]:visible');
+    await group.getByRole('button', {name: 'Any'}).click();
+    await page.getByRole('option', { name: '10,000+' }).click();
+
+    
+    for(const enrollment of await coulmnEnrollement.allTextContents()) {
+        
+       // expect(parseInt(enrollment)).toBeLessThanOrEqual(10000) 
+       //If the values ​​contain commas -> remove all commas and explicitly specify the decimal system.
+        expect(parseInt(enrollment.replace(/,/g, ''), 10)).toBeGreaterThanOrEqual(10000);
+
+    }
+
   });
 
-//   test('should display only Beginner courses when other levels are unchecked', async ({ page }) => {
 
-//   });
-
-//   test('should display only courses with at least 10,000 enrollments', async ({ page }) => {
-
-//   });
-
-//   test('should apply multiple filters simultaneously', async ({ page }) => {
-
-//   });
-
-//   test('should display a message when no courses match the filters', async ({ page }) => {
-
-//   });
-
-//   test('should reset all filters to their default values', async ({ page }) => {
-
-//   });
-
-//   test('should sort courses by enrollment count in ascending order', async ({ page }) => {
-
-//   });
-
-//   test('should sort courses alphabetically by name', async ({ page }) => {
-
-//  });
-
-
+  
 });
