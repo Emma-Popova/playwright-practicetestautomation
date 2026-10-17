@@ -68,7 +68,7 @@ test.describe('Course Filtering and Sorting', () => {
         } 
     });
 
-       test('should display a message when no courses match the filters', async ({ page }) => {
+    test('should display a message when no courses match the filters', async ({ page }) => {
         const groupLanguage = page.getByRole('group', {name: "Language"});
         const groupLevel = page.getByRole('group', {name: "Level"});
         const groupEnrollment = page.getByRole('group', {name: "Min enrollments"});
@@ -82,7 +82,7 @@ test.describe('Course Filtering and Sorting', () => {
    
     });
 
-        test('should reset all filters to their default values', async ({ page }) => {
+    test('should reset all filters to their default values', async ({ page }) => {
         const groupLanguage = page.getByRole('group', {name: "Language"});
         const groupLevel = page.getByRole('group', {name: "Level"});
         const groupEnrollment = page.getByRole('group', {name: "Min enrollments"});
@@ -104,10 +104,8 @@ test.describe('Course Filtering and Sorting', () => {
     
     });
 
-      test('should sort courses by enrollment count in ascending order', async ({ page }) => {
-
+    test('should sort courses by enrollment count in ascending order', async ({ page }) => {
         await page.getByLabel('Sort by').selectOption({ label: 'Enrollments' });
-        //await page.getByLabel('Sort by:').selectOption('col_level');
         const columnEnrollment = page.locator('tbody td[data-col="enrollments"]:visible');
         const enrollments = await columnEnrollment.allTextContents();
 
@@ -117,17 +115,24 @@ test.describe('Course Filtering and Sorting', () => {
           expect(enrollmentNumbers[i]).toBeLessThanOrEqual(enrollmentNumbers[i + 1]);
         }
 
-
   });
 
+    test('should sort courses alphabetically by name', async ({ page }) => {
+        await page.getByLabel('Sort by').selectOption({ label: 'Course Name' });
+        const columnName = page.locator('tbody td[data-col="course"]:visible');
+        const courseNames = await columnName.allTextContents();
 
-   });
+        const sortedNames = [...courseNames].sort((a, b) =>  a.trim().localeCompare(b.trim()));
 
+            expect(courseNames.map(name => name.trim())).toEqual(sortedNames);
+  });
+   
+  });
 
-// Test case 7: Sort by Enrollments (ascending, numeric)
+// Test case 8: Sort by Course Name (alphabetical)
 // Open page
-// Set Sort by = Enrollments
-// Verify visible rows are ordered from smallest to largest enrollment
-// Verify numbers with commas sort correctly
-// Fails if the sort is lexicographic
+// Set Sort by = Course Name
+// Verify visible rows are ordered A→Z by course name
+// Verify order updates after changing filters
+// Fails if string compare ignores case/whitespace inconsistently
 
