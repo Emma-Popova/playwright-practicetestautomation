@@ -32,11 +32,11 @@ test.describe('Course Filtering and Sorting', () => {
 
   test('should display only courses with at least 10,000 enrollments', async ({ page }) => {
     const group = page.getByRole('group', {name: "Min enrollments"});
-    const coulmnEnrollement = page.locator('tbody td[data-col="enrollments"]:visible');
+    const columnEnrollment = page.locator('tbody td[data-col="enrollments"]:visible');
     await group.getByRole('button', {name: 'Any'}).click();
     await page.getByRole('option', { name: '10,000+' }).click();
     
-    for(const enrollment of await coulmnEnrollement.allTextContents()) {
+    for(const enrollment of await columnEnrollment.allTextContents()) {
         
        //(parseInt(enrollment)).toBeLessThanOrEqual(10000)->If the values ​​contain commas -> remove all commas and explicitly specify the decimal system.
         expect(parseInt(enrollment.replace(/,/g, ''), 10)).toBeGreaterThanOrEqual(10000);
@@ -55,7 +55,7 @@ test.describe('Course Filtering and Sorting', () => {
 
         const columnLanguage = page.locator('tbody td[data-col="language"]:visible'); 
         const columnLevel = page.locator('tbody td[data-col="level"]:visible');
-        const coulmnEnrollement = page.locator('tbody td[data-col="enrollments"]:visible');
+        const columnEnrollment = page.locator('tbody td[data-col="enrollments"]:visible');
 
         for (const language of await columnLanguage.allTextContents()) {
         expect(language.trim()).toBe('Python');
@@ -63,7 +63,7 @@ test.describe('Course Filtering and Sorting', () => {
         for(const level of await columnLevel.allTextContents()) {
         expect(level.trim()).toBe('Beginner');
         }
-       for(const enrollment of await coulmnEnrollement.allTextContents()) {
+       for(const enrollment of await columnEnrollment.allTextContents()) {
         expect(parseInt(enrollment.replace(/,/g, ''), 10)).toBeGreaterThanOrEqual(10000);
         } 
     });
@@ -101,21 +101,33 @@ test.describe('Course Filtering and Sorting', () => {
         await expect(groupLevel.getByRole('checkbox', {name: " Intermediate"})).toBeChecked();
         await expect(groupLevel.getByRole('checkbox', {name: " Advanced"})).toBeChecked();
         await expect(groupEnrollment.getByRole('button', {name: "Any"})).toBeVisible();
-
- 
-     
+    
     });
+
+      test('should sort courses by enrollment count in ascending order', async ({ page }) => {
+
+        await page.getByLabel('Sort by').selectOption({ label: 'Enrollments' });
+        //await page.getByLabel('Sort by:').selectOption('col_level');
+        const columnEnrollment = page.locator('tbody td[data-col="enrollments"]:visible');
+        const enrollments = await columnEnrollment.allTextContents();
+
+        const enrollmentNumbers = enrollments.map(enrollment => Number(enrollment.replace(/,/g, '').trim())
+    );
+        for (let i = 0; i < enrollmentNumbers.length - 1; i++) {
+          expect(enrollmentNumbers[i]).toBeLessThanOrEqual(enrollmentNumbers[i + 1]);
+        }
+
+
+  });
 
 
    });
 
 
-// Test case 6: Reset button visibility and behavior
-
-// Change any filter
-// Verify the Reset button becomes visible
-// Click Reset
-// Verify Language = Any, all Levels checked, Min enrollments = Any
-// Verify the Reset button is hidden and all rows are visible
-// Fails if defaults or visibility logic are not restored
+// Test case 7: Sort by Enrollments (ascending, numeric)
+// Open page
+// Set Sort by = Enrollments
+// Verify visible rows are ordered from smallest to largest enrollment
+// Verify numbers with commas sort correctly
+// Fails if the sort is lexicographic
 
