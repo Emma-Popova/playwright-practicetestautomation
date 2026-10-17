@@ -38,8 +38,7 @@ test.describe('Course Filtering and Sorting', () => {
     
     for(const enrollment of await coulmnEnrollement.allTextContents()) {
         
-       // expect(parseInt(enrollment)).toBeLessThanOrEqual(10000) 
-       //If the values ​​contain commas -> remove all commas and explicitly specify the decimal system.
+       //(parseInt(enrollment)).toBeLessThanOrEqual(10000)->If the values ​​contain commas -> remove all commas and explicitly specify the decimal system.
         expect(parseInt(enrollment.replace(/,/g, ''), 10)).toBeGreaterThanOrEqual(10000);
         }
     });
@@ -48,10 +47,10 @@ test.describe('Course Filtering and Sorting', () => {
         const groupLanguage = page.getByRole('group', {name: "Language"});
         const groupLevel = page.getByRole('group', {name: "Level"});
         const groupEnrollment = page.getByRole('group', {name: "Min enrollments"});
-        await groupLanguage.getByRole('radio', {name: ' Python'}).click();
+        await groupLanguage.getByRole('radio', {name: " Python"}).click();
         await groupLevel.getByRole('checkbox', {name: " Intermediate"}).uncheck();
         await groupLevel.getByRole('checkbox', {name:" Advanced"}).uncheck();
-        await groupEnrollment.getByRole('button', {name: 'Any'}).click();
+        await groupEnrollment.getByRole('button', {name: "Any"}).click();
         await page.getByRole('option', { name: '10,000+' }).click();
 
         const columnLanguage = page.locator('tbody td[data-col="language"]:visible'); 
@@ -67,30 +66,56 @@ test.describe('Course Filtering and Sorting', () => {
        for(const enrollment of await coulmnEnrollement.allTextContents()) {
         expect(parseInt(enrollment.replace(/,/g, ''), 10)).toBeGreaterThanOrEqual(10000);
         } 
-     });
+    });
 
        test('should display a message when no courses match the filters', async ({ page }) => {
         const groupLanguage = page.getByRole('group', {name: "Language"});
         const groupLevel = page.getByRole('group', {name: "Level"});
         const groupEnrollment = page.getByRole('group', {name: "Min enrollments"});
-        await groupLanguage.getByRole('radio', {name: ' Java'}).click();
+        await groupLanguage.getByRole('radio', {name: " Java"}).click();
         await groupLevel.getByRole('checkbox', {name: " Intermediate"}).uncheck();
         await groupLevel.getByRole('checkbox', {name:" Beginner"}).uncheck();
-        await groupEnrollment.getByRole('button', {name: 'Any'}).click();
+        await groupEnrollment.getByRole('button', {name: "Any"}).click();
         await page.getByRole('option', { name: '10,000+' }).click();
 
         await expect(page.getByText('No matching courses.', { exact: true })).toBeVisible();
    
-     });
+    });
+
+        test('should reset all filters to their default values', async ({ page }) => {
+        const groupLanguage = page.getByRole('group', {name: "Language"});
+        const groupLevel = page.getByRole('group', {name: "Level"});
+        const groupEnrollment = page.getByRole('group', {name: "Min enrollments"});
+        await groupLanguage.getByRole('radio', {name: " Java"}).click();
+        await groupLevel.getByRole('checkbox', {name: " Advanced"}).uncheck();
+        await groupLevel.getByRole('checkbox', {name:" Intermediate"}).uncheck();
+        await groupEnrollment.getByRole('button', {name: "Any"}).click();
+        await page.getByRole('option', { name: '10,000+' }).click();
+
+        const resetButton = page.getByRole('button', {name: "Reset"});
+        await expect(resetButton).toBeVisible();
+
+        await resetButton.click();
+        await expect(groupLanguage.getByRole('radio', {name: "Any"})).toBeChecked();
+        await expect(groupLevel.getByRole('checkbox', {name: " Beginner"})).toBeChecked();
+        await expect(groupLevel.getByRole('checkbox', {name: " Intermediate"})).toBeChecked();
+        await expect(groupLevel.getByRole('checkbox', {name: " Advanced"})).toBeChecked();
+        await expect(groupEnrollment.getByRole('button', {name: "Any"})).toBeVisible();
+
+ 
+     
+    });
 
 
    });
 
 
-// Select a combination that yields no matches (e.g., Language with Level that does not exist)
-// Verify “No matching courses.” is shown
-// Fails if no-data state does not toggle with filters
+// Test case 6: Reset button visibility and behavior
 
-
-
+// Change any filter
+// Verify the Reset button becomes visible
+// Click Reset
+// Verify Language = Any, all Levels checked, Min enrollments = Any
+// Verify the Reset button is hidden and all rows are visible
+// Fails if defaults or visibility logic are not restored
 
